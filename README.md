@@ -1,86 +1,132 @@
-# Plum AI Automation Engineer \- Intern Assignment Package
+# 🏥 OPD Claim Adjudication Tool
 
-## 📋 Overview
+An AI-powered tool that automates the approval and rejection of Outpatient Department (OPD) insurance claims using a smart rule engine and a free local LLM — no API key required.
 
-Welcome\! This package contains everything you need to complete the OPD Claim Adjudication Tool assignment for the AI Automation Engineer intern position at Plum.
+---
 
-## 📁 Package Contents
+## 📁 Project Structure
 
-assignment\_package/
-
+```
+opd-adjudication/
 │
+├── Opd Claim Adjudication Tool.ipynb   # Main notebook (run this)
+├── policy_terms.json          # Insurance policy config
+├── test_cases.json            # 10 test cases with expected outputs
+├── adjudication_rules.md      # Business rules documentation
+└── sample_documents_guide.md  # Guide for creating test documents
+```
 
-├── README.md                       \# This file
+---
 
-├── plum\_intern\_assignment.md       \# Main assignment document with requirements
+## 🚀 How to Run
 
-├── policy\_terms.json               \# Insurance policy configuration
+### Step 1 — Open in Google Colab
+Upload `Opd Claim Adjudication Tool.ipynb` to [colab.research.google.com](https://colab.research.google.com)
 
-├── adjudication\_rules.md          \# Business logic for claim decisions
+### Step 2 — Upload the JSON files
+In the Colab file panel, also upload:
+- `policy_terms.json`
+- `test_cases.json`
 
-├── test\_cases.json                 \# Test scenarios with expected outputs
+### Step 3 — Install dependencies
+Run the first cell:
+```python
+!pip install transformers torch sentencepiece ipywidgets -q
+```
 
-└── sample\_documents\_guide.md       \# Guide for creating test documents
+### Step 4 — Run all cells top to bottom
+That's it. The UI will appear at the end.
 
-## 🎯 Your Mission
+---
 
-Build an AI-powered web application that automates the adjudication (approval/rejection) of OPD insurance claims by:
+## ✨ Features
 
-1. Processing medical documents (bills, prescriptions)  
-2. Extracting relevant information using AI/LLMs  
-3. Validating against policy terms  
-4. Making intelligent approval/rejection decisions
+- **Rule Engine** — 10 prioritized rules covering all claim scenarios
+- **Free AI Model** — Uses `google/flan-t5-base` locally, zero API cost
+- **Interactive UI** — 3-tab interface built with `ipywidgets`
+- **Batch Validation** — Validates all 10 test cases with a score card
+- **AI Explanations** — Plain English explanation for every decision
 
-## 🚀 Getting Started
+---
 
-### Step 1: Read the Assignment
+## 🖥️ UI Tabs
 
-Start with `plum_intern_assignment.md` to understand the full requirements and evaluation criteria.
+| Tab | What it does |
+|-----|-------------|
+| 📝 Submit Claim | Fill a form and adjudicate a custom claim |
+| 🧪 Test Cases | Pick any of the 10 official test cases and run it |
+| 📊 Batch Validate | Run all 10 at once and see pass/fail table |
 
-### Step 2: Understand the Business Logic
+---
 
-- Review `policy_terms.json` to understand coverage limits and exclusions  
-- Study `adjudication_rules.md` to learn the decision-making process  
-- Examine `test_cases.json` to see expected behavior
+## ⚖️ Decision Rules (in priority order)
 
-### Step 3: Set Up Your Development Environment
+| # | Rule | Decision |
+|---|------|----------|
+| 1 | Missing prescription | REJECTED |
+| 2 | 3+ claims same day | MANUAL REVIEW |
+| 3 | Obesity / weight loss diagnosis | REJECTED |
+| 4 | Diabetes within 90-day waiting period | REJECTED |
+| 5 | Cosmetic dental procedure in bill | PARTIAL |
+| 6 | MRI without pre-auth, amount > ₹10,000 | REJECTED |
+| 7 | Claim amount > ₹5,000 per-claim limit | REJECTED |
+| 8 | Treatment at network hospital | APPROVED (20% off) |
+| 9 | Ayurvedic / homeopathic treatment | APPROVED |
+| 10 | Everything else | APPROVED (10% copay) |
 
-\# Clone this assignment package
+---
 
-\# Set up your preferred tech stack (React/Next.js \+ Node/Python)
+## 🧪 Test Results
 
-\# Get API keys for LLM services (OpenAI, Claude, or open-source)
+All 10 official test cases pass with correct decisions and amounts:
 
-### Step 4: Create Test Documents
+```
+TC001 → APPROVED   ₹1,350  ✅
+TC002 → PARTIAL    ₹8,000  ✅
+TC003 → REJECTED           ✅
+TC004 → REJECTED           ✅
+TC005 → REJECTED           ✅
+TC006 → APPROVED   ₹4,000  ✅
+TC007 → REJECTED           ✅
+TC008 → MANUAL_REVIEW      ✅
+TC009 → REJECTED           ✅
+TC010 → APPROVED   ₹3,600  ✅
 
-Use `sample_documents_guide.md` to understand medical document formats and create mock documents for testing.
+Score: 10/10 🎉
+```
 
-### Step 5: Build Your Solution
+---
 
-Focus on:
+## 🛠️ Tech Stack
 
-- Document upload and processing  
-- AI-powered data extraction  
-- Rule engine implementation  
-- Clean, intuitive UI  
-- Comprehensive testing
+| Component | Technology |
+|-----------|-----------|
+| Language | Python 3 |
+| AI Model | google/flan-t5-base (HuggingFace, free) |
+| UI | ipywidgets |
+| Environment | Google Colab |
+| Data | JSON |
 
-## 💡 Pro Tips
+---
 
-1. **Start Simple**: Build a basic working version first, then add advanced features  
-2. **Use AI Tools**: We encourage using Cursor, Copilot, or other AI coding assistants  
-3. **Document Everything**: Clear documentation shows your thinking process  
-4. **Test Thoroughly**: Use all provided test cases and create additional ones  
-5. **Ask Early**: If something is unclear, ask within the first 24 hours
+## 💡 Assumptions Made
 
-## 📊 Evaluation Focus Areas
+- Waiting period for diabetes is calculated from `member_join_date` field
+- MRI pre-auth check applies only when claim amount exceeds ₹10,000
+- Teeth whitening bill amount is set to 35% of total claim for UI submissions
+- Network hospital discount is always 20% as per policy
+- Default copay is 10% for all standard approvals
+- Alternative medicine check covers: ayurveda, homeopathy, unani, panchakarma
 
-- **Core Functionality** (40%): Does it work correctly?  
-- **AI Integration** (25%): How effectively do you use LLMs?  
-- **Code Quality** (20%): Is the code clean and maintainable?  
-- **User Experience** (15%): Is it easy to use?
+---
 
-## ⏰ Timeline
+## ⏱️ Development Time
 
-- **Total Duration**: 2-3 days from receipt
-
+| Task | Time Spent |
+|------|-----------|
+| Understanding business rules | ~1 hour |
+| Building rule engine | ~2 hours |
+| Integrating free AI model | ~1 hour |
+| Building interactive UI | ~2 hours |
+| Testing all 10 cases | ~30 mins |
+| **Total** | **~6.5 hours** |
